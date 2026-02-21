@@ -35,6 +35,12 @@ struct DailyBoldTrackerView: View {
             }
             .padding()
             
+            Button(action: resetButton) {
+                Text("Reset")
+                    .foregroundColor(.red)
+            }
+            .padding()
+            
             Spacer()
         }
         .padding()
@@ -51,6 +57,12 @@ struct DailyBoldTrackerView: View {
             }
             lastBoldDate = today
         }
+    }
+    
+    ///BOTON DE RESET SOLO PARA DESARROLLO
+    func resetButton () {
+        lastBoldDate = ""
+        streakCount = 0
     }
 }
 

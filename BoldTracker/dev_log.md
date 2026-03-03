@@ -114,3 +114,59 @@ Focus now:
 - Solid understanding of data types
 - State management
 - Clean incremental improvements
+
+
+## 📅 Phase 2 – Architecture Refactor (MVVM)
+
+### 🎯 Objective
+Separate UI logic from business logic using the MVVM pattern to improve scalability and maintainability.
+
+---
+
+## 🔄 Major Refactor – Introduced ViewModel
+
+Created a new file:
+
+- `BoldTrackerViewModel.swift`
+
+Adopted the MVVM architecture pattern:
+
+- View → Handles UI only
+- ViewModel → Handles logic and persistence
+- Model → Data types (Date, Int)
+
+---
+
+## 🧠 What Changed
+
+### 1️⃣ Removed @AppStorage from the View
+
+Previously:
+- The View handled persistence directly using `@AppStorage`.
+- The View calculated streak logic.
+- The View handled date comparisons.
+
+Problem:
+- Too many responsibilities.
+- Harder to scale.
+- Violates separation of concerns.
+
+Now:
+- The View only displays data.
+- The View calls ViewModel methods.
+- The ViewModel owns the logic and storage.
+
+---
+
+### 2️⃣ Implemented ObservableObject
+
+`BoldTrackerViewModel` now conforms to `ObservableObject`.
+
+Key concept learned:
+- `ObservableObject` allows SwiftUI to listen for state changes.
+- `@Published` properties notify the View automatically.
+
+Implemented:
+
+```swift
+@Published var streakCount = 0

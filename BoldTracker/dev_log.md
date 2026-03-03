@@ -97,7 +97,7 @@ Edge cases considered:
 
 ## 🚧 Next Possible Steps
 
-- Move logic into a ViewModel (MVVM structure)
+- Move logic into a ViewModel (MVVM structure) - DONE
 - Disable button if already marked today
 - Add simple animation or visual feedback
 - Add streak history (Array of Date)
@@ -170,3 +170,69 @@ Implemented:
 
 ```swift
 @Published var streakCount = 0
+
+This ensures the UI updates whenever the streak changes.
+
+### 3️⃣ Replaced @AppStorage with Manual Persistence
+Instead of using @AppStorage inside the ViewModel,
+we now use UserDefaults directly.
+
+Why?
+- Clearer control over when data is saved
+- Better architectural separation
+- Avoided protocol conformance issues with ObservableObject
+- More explicit state management
+
+Implemented:
+- Data loading in init()
+- Centralized saving logic inside a private save() function
+
+### 4️⃣ Introduced Initialization Logic
+
+Added:
+init() {
+    streakCount = UserDefaults.standard.integer(forKey: "streakCount")
+    lastBoldDateInterval = UserDefaults.standard.double(forKey: "lastBoldDate")
+}
+
+This ensures:
+- Data is restored when the app launches
+- State remains persistent across sessions
+
+🧠 Architectural Concepts Learned
+- What MVVM really means in practice
+- Why Views should not contain business logic
+- Difference between @StateObject and @ObservedObject
+- Why @Published is required in ObservableObject
+- How SwiftUI reacts to state changes
+- Manual persistence with UserDefaults
+- Separation of responsibilities
+
+🏗 Current Architecture
+DailyBoldTrackerView
+        ↓
+BoldTrackerViewModel (ObservableObject)
+        ↓
+UserDefaults (Persistence)
+
+🚀 Benefits of This Refactor
+- Cleaner code structure
+- Easier to expand features
+- More professional architecture
+- Better long-term scalability
+- Clear separation between UI and logic
+
+📌 Personal Reflection
+- This was the first major architectural decision in the project.
+- Understanding MVVM required revisiting Swift fundamentals.
+
+Key realization:
+- Good architecture reduces confusion as the project grows.
+- Learning this early prevents technical debt later.
+
+## 📌 Next Steps
+
+- Add "alreadyMarkedToday" computed property
+- Disable button if already marked
+- Introduce streak history
+- Add simple statistics screen

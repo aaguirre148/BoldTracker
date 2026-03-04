@@ -36,7 +36,14 @@ struct DailyBoldTrackerView: View {
                     .foregroundColor(.red)
             }
             .padding()
-            
+                        
+            List {
+                ForEach(viewModel.boldHistory.sorted(by: >), id: \.self) { interval in
+                    let date = Date(timeIntervalSince1970: interval)
+                    Text(date.formatted(date: .abbreviated, time: .omitted))
+                }
+            }
+            .frame(height: 200)
             Spacer()
         }
         .padding()

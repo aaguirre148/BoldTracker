@@ -10,6 +10,7 @@ import SwiftUI
 struct DailyBoldTrackerView: View {
     
     @StateObject private var viewModel = BoldTrackerViewModel()
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
     var body: some View {
         VStack(spacing: 24) {
@@ -36,7 +37,7 @@ struct DailyBoldTrackerView: View {
                     .foregroundColor(.red)
             }
             .padding()
-                        
+            
             List {
                 ForEach(viewModel.boldHistory.sorted(by: >), id: \.self) { interval in
                     let date = Date(timeIntervalSince1970: interval)
@@ -44,7 +45,23 @@ struct DailyBoldTrackerView: View {
                 }
             }
             .frame(height: 200)
-            Spacer()
+            //Spacer()
+            
+            // LazyGrid para hacer la vista de calendario
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(viewModel.last30Days, id: \.self) { date in
+                    
+                    let dayInterval = Calendar.current.startOfDay(for: date).timeIntervalSince1970
+                    let isBold = viewModel.boldHistory.contains(dayInterval)
+                    
+                    Circle()
+                        .fill(isBold ? Color.green : Color.gray.opacity(0.2))
+                        .frame(width: 12, height: 12)
+                        .animation(.easeInOut(duration: 0.2), value: isBold)
+                }
+            }
+            .padding()
+            
         }
         .padding()
     }

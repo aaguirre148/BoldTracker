@@ -17,6 +17,16 @@ class BoldTrackerViewModel: ObservableObject {
     
     private var lastBoldDateInterval: Double = 0
     
+    //Creo los últimos 30 días para el calendario
+    var last30Days: [Date] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        
+        return (0..<30).compactMap {
+            calendar.date(byAdding: .day, value: -$0, to: today)
+        }.reversed()
+    }
+    
     init() {
         streakCount = UserDefaults.standard.integer(forKey: "streakCount")
         lastBoldDateInterval = UserDefaults.standard.double(forKey: "lastBoldDate")
@@ -24,34 +34,42 @@ class BoldTrackerViewModel: ObservableObject {
     }
     
     func markBoldAction() {
-        let today = Date()
         let calendar = Calendar.current
-        let todayStart = Calendar.current.startOfDay(for: today).timeIntervalSince1970
-        let lastDate = Date(timeIntervalSince1970: lastBoldDateInterval)
+        let today = Date()
+        let todayStart = calendar.startOfDay(for: today)
+        let todayInterval = todayStart.timeIntervalSince1970
         
-        // Si nunca se ha guardado fecha
-        if lastBoldDateInterval == 0 {
-            streakCount = 1
-            lastBoldDateInterval = today.timeIntervalSince1970
-        }
-        
-        //Bold History
-        if !boldHistory.contains(todayStart) {
-            boldHistory.append(todayStart)
+        // Si ya marcaste hoy, no hacemos nada
+        if boldHistory.contains(todayInterval) {
             return
         }
-        //Revisa si la racha permanece o se ha roto
-        if let diff = calendar.dateComponents([.day], from: calendar.startOfDay(for: lastDate),
-                                              to: calendar.startOfDay(for: today)).day {
-            if diff == 1 { // Día consecutivo
-                streakCount += 1
-            } else if diff > 1 { // Se rompió la racha/
-                streakCount = 1
+        
+        // Primera vez
+        if lastBoldDateInterval == 0 {
+            streakCount = 1
+        } else {
+            let lastDate = Date(timeIntervalSince1970: lastBoldDateInterval)
+            
+            if let diff = calendar.dateComponents(
+                [.day],
+                from: calendar.startOfDay(for: lastDate),
+                to: todayStart
+            ).day {
+                
+                if diff == 1 {
+                    streakCount += 1
+                } else if diff > 1 {
+                    streakCount = 1
+                }
             }
-            // Si diff == 0 no hacemos nada (ya marcamos una acción audaz hoy)
         }
         
-        lastBoldDateInterval = today.timeIntervalSince1970
+        // Agregamos al historial
+        boldHistory.append(todayInterval)
+        
+        // Actualizamos última fecha
+        lastBoldDateInterval = todayInterval
+        
         save()
     }
     

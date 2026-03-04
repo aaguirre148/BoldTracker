@@ -236,3 +236,108 @@ Key realization:
 - Disable button if already marked
 - Introduce streak history
 - Add simple statistics screen
+
+
+### 📅 Phase 3 – Streak History & Visual Calendar
+
+🎯 Objective
+Extend the app from a simple counter to a historical tracking system with visualization.
+
+🟢 1️⃣ Added Bold History
+Introduced:
+@Published var boldHistory: [Double] = []
+Each entry:
+Represents one successful bold day
+Stored as startOfDay.timeIntervalSince1970
+
+💾 Updated Persistence
+Added history to:
+init() loading
+save() method
+UserDefaults.standard.set(boldHistory, forKey: "boldHistory")
+
+🧠 Data Normalization
+Used:
+Calendar.current.startOfDay(for: date)
+Why:
+Avoid duplicate entries
+Avoid time-of-day inconsistencies
+Ensure safe date comparison
+
+🧠 Refactored markBoldAction()
+Improved logic flow:
+Check if today already exists in history
+Calculate day difference from last recorded date
+Update streak accordingly
+Append to history
+Save all changes
+This prevents:
+Premature returns
+Inconsistent state
+Missed persistence
+
+🗓 2️⃣ Added Visual Calendar (Last 30 Days)
+Implemented a GitHub-style activity grid.
+Used:
+LazyVGrid
+7 flexible columns
+Computed property for last 30 days
+var last30Days: [Date]
+For each day:
+Normalize to startOfDay
+Convert to TimeInterval
+Check presence in boldHistory
+Render green circle if true
+Render gray circle if false
+
+🧠 Concepts Reinforced
+Date normalization
+Calendar-based day comparison
+Computed properties
+Reactive UI updates
+MVVM in real practice
+Avoiding duplicated state mutation
+Persistence management
+Visualizing temporal data
+
+🏗 Current Architecture
+DailyBoldTrackerView
+        ↓
+BoldTrackerViewModel (ObservableObject)
+        ↓
+UserDefaults
+
+Tracked State:
+streakCount
+lastBoldDateInterval
+boldHistory[]
+last30Days (computed)
+
+📈 Project Evolution
+The app evolved from:
+“Simple daily streak counter”
+Into:
+“A behavior tracking system with historical visualization”
+
+The architecture now supports:
+Longest streak tracking
+Monthly summaries
+Performance metrics
+Expanded statistics view
+
+🔭 Next Exploration Ideas
+Align calendar to real weeks
+Add tap interaction to show selected date
+Compute longest historical streak
+Add monthly performance percentage
+Introduce animations for new entries
+
+🧠 Personal Reflection
+This project moved from learning syntax to designing systems.
+Key realizations:
+Architecture matters early.
+Temporal data introduces complexity.
+Normalizing state prevents subtle bugs.
+Reactive UI depends on proper state modeling.
+BoldTracker is no longer a simple counter.
+It is becoming a structured behavior tracking system.

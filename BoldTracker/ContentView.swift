@@ -14,21 +14,27 @@ struct DailyBoldTrackerView: View {
     
     var body: some View {
         VStack(spacing: 24) {
+            Spacer()
             Text("🔥 Daily Bold Tracker")
                 .font(.largeTitle)
                 .bold()
             
-            Text("Racha actual: \(viewModel.streakCount) días")
-                .font(.title2)
-                .foregroundColor(.secondary)
+            //Text("Racha actual: \(viewModel.streakCount) días")
+            VStack {
+                Text("TU RACHA:")
+                Text("\(viewModel.streakCount) días")
+            }
+            .font(.title2)
+            .foregroundColor(.accentColor)
+            .padding(20)
             
             Button(action: viewModel.markBoldAction) {
                 Text("Hoy fui audaz 💥")
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .maximumMagnitude(5, 150))
                     .background(Color.blue)
                     .foregroundColor(.white)
-                    .cornerRadius(12)
+                    .cornerRadius(20)
             }
             .padding()
             
@@ -44,13 +50,11 @@ struct DailyBoldTrackerView: View {
                     Text(date.formatted(date: .abbreviated, time: .omitted))
                 }
             }
-            .frame(height: 200)
-            //Spacer()
-            
+            .frame(height: 120)
+                        
             // LazyGrid para hacer la vista de calendario
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(viewModel.last30Days, id: \.self) { date in
-                    
                     let dayInterval = Calendar.current.startOfDay(for: date).timeIntervalSince1970
                     let isBold = viewModel.boldHistory.contains(dayInterval)
                     
@@ -61,12 +65,9 @@ struct DailyBoldTrackerView: View {
                 }
             }
             .padding()
-            
         }
         .padding()
     }
-    
-    
 }
 
 #Preview {

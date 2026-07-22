@@ -14,7 +14,6 @@ class BoldTrackerViewModel: ObservableObject {
     // Guarda la racha actual y la última fecha registrada
     @Published var streakCount = 0
     @Published var boldHistory: [Double] = []
-    
     private var lastBoldDateInterval: Double = 0
     
     //Creo los últimos 30 días para el calendario
@@ -24,7 +23,7 @@ class BoldTrackerViewModel: ObservableObject {
         
         return (0..<30).compactMap {
             calendar.date(byAdding: .day, value: -$0, to: today)
-        }.reversed()
+        }
     }
     
     init() {

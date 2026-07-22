@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct BoldTrackerApp: App {
+struct BoldTracker: App {
     var body: some Scene {
         WindowGroup {
-            DailyBoldTrackerView()
+            BoldTrackerView()
         }
     }
 }

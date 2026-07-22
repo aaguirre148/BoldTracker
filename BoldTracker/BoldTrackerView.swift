@@ -7,19 +7,17 @@
 
 import SwiftUI
 
-struct DailyBoldTrackerView: View {
+struct BoldTrackerView: View {
     
     @StateObject private var viewModel = BoldTrackerViewModel()
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
     var body: some View {
         VStack(spacing: 24) {
-            Spacer()
             Text("🔥 Daily Bold Tracker")
                 .font(.largeTitle)
                 .bold()
             
-            //Text("Racha actual: \(viewModel.streakCount) días")
             VStack {
                 Text("TU RACHA:")
                 Text("\(viewModel.streakCount) días")
@@ -44,13 +42,13 @@ struct DailyBoldTrackerView: View {
             }
             .padding()
             
-            List {
+            /*List {
                 ForEach(viewModel.boldHistory.sorted(by: >), id: \.self) { interval in
                     let date = Date(timeIntervalSince1970: interval)
                     Text(date.formatted(date: .abbreviated, time: .omitted))
                 }
             }
-            .frame(height: 120)
+            .frame(height: 110)*/
                         
             // LazyGrid para hacer la vista de calendario
             LazyVGrid(columns: columns, spacing: 10) {
@@ -66,10 +64,9 @@ struct DailyBoldTrackerView: View {
             }
             .padding()
         }
-        .padding()
     }
 }
 
 #Preview {
-    DailyBoldTrackerView()
+    BoldTrackerView()
 }
